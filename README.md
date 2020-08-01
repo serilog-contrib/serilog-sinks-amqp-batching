@@ -46,7 +46,7 @@ namespace SerilogAMQPSinkTest
 
 Use the `ConnectionString` property of `AMQPSinkOptions` to specify the endpoint.
 
-A free hosted and managed RabbitMQ instance can be created at [stackhero](https://www.stackhero.io). Current sink has been tested with RabbitMQ and works following connection string format:
+A free, hosted and managed RabbitMQ instance can be created at [stackhero](https://www.stackhero.io). Current sink has been tested with RabbitMQ and works following connection string format:
 ```
 amqps://username:passwordH@aileuh.stackhero-network.com:5671
 ```
