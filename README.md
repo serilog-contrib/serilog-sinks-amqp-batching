@@ -44,13 +44,13 @@ namespace SerilogAMQPSinkTest
 ```
 ## Connection String Format
 
-The `ConnectionString` property of `AMQPSinkOptions` class has been tested to work with below formats.
+Use the `ConnectionString` property of `AMQPSinkOptions` to specify the endpoint.
 
 A free hosted and managed RabbitMQ instance can be created at [stackhero](https://www.stackhero.io). Current sink has been tested with RabbitMQ and works following connection string format:
 ```
 amqps://username:passwordH@aileuh.stackhero-network.com:5671
 ```
-If you are using [EventHub](https://azure.microsoft.com/da-dk/services/event-hubs/), the same format works:
+The sink has also been tested with EventHuib and works with the same format.
 
 `amqps://username:password=@my-eventhub.servicebus.windows.net:5671`
 
