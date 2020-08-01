@@ -3,6 +3,8 @@
 
 A Serilog sink that writes AMQP 1.0 messages using the [AMQPNetLite](https://www.nuget.org/packages/AMQPNetLite/) package. 
 
+It has been tested to work with EventHub and RabbitMQ.
+
 ## Quick Start
 
 The most basic minimalistic sink initialization is done like this.
@@ -40,5 +42,16 @@ namespace SerilogAMQPSinkTest
     }
 }
 ```
+## Connection String Format
+
+The `ConnectionString` property of `AMQPSinkOptions` class has been tested to work with below formats.
+
+A free hosted and managed RabbitMQ instance can be created at [stackhero](https://www.stackhero.io). Current sink has been tested with RabbitMQ and works following connection string format:
+```
+amqps://username:passwordH@aileuh.stackhero-network.com:5671
+```
+If you are using [EventHub](https://azure.microsoft.com/da-dk/services/event-hubs/), the same format works:
+
+`amqps://username:password=@my-eventhub.servicebus.windows.net:5671`
 
 
