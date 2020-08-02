@@ -58,9 +58,9 @@ namespace Serilog.Sinks.AMQP
             _isRunning = false;
         }
 
-        public Task OnEmptyBatchAsync()
+        public async Task OnEmptyBatchAsync()
         {
-            throw new NotImplementedException();
+            await Task.CompletedTask;
         }
 
         public void Dispose()
