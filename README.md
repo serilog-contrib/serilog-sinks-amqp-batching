@@ -1,9 +1,10 @@
 
+
 # serilog-sinks-amqp
 
-A Serilog sink that writes AMQP 1.0 messages using the [AMQPNetLite](https://www.nuget.org/packages/AMQPNetLite/) package. 
+A Serilog sink that writes AMQP 1.0 messages using the [AMQPNetLite](https://www.nuget.org/packages/AMQPNetLite/) package. Can be used as an alternative to [serilog-sinks-azureeventhub](https://github.com/serilog/serilog-sinks-azureeventhub) and [serilog-sinks-rabbitmq](https://github.com/steffenlyng/serilog-sinks-rabbitmq), enabling you to easily switch between message brokers, by changing the connection string.
 
-It has been tested to work with EventHub and RabbitMQ.
+The sink has been tested to work with EventHub and RabbitMQ.
 
 ## Quick Start
 
@@ -50,8 +51,6 @@ A free, hosted and managed RabbitMQ instance can be created at [stackhero](https
 ```
 amqps://username:passwordH@aileuh.stackhero-network.com:5671
 ```
-The sink has also been tested with EventHuib and works with the same format.
+The sink has also been tested with EventHub and works with the same format.
 
 `amqps://username:password=@my-eventhub.servicebus.windows.net:5671`
-
-
