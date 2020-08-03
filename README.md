@@ -1,7 +1,7 @@
-
-
 # serilog-sinks-amqp
+[![Build status](https://ci.appveyor.com/api/projects/status/3i31f3t2he3milww?svg=true)](https://ci.appveyor.com/project/xzuttz/serilog-sinks-amqp)
 
+# Purpose
 A Serilog sink that writes AMQP 1.0 messages using the [AMQPNetLite](https://www.nuget.org/packages/AMQPNetLite/) package. Can be used as an alternative to [serilog-sinks-azureeventhub](https://github.com/serilog/serilog-sinks-azureeventhub) and [serilog-sinks-rabbitmq](https://github.com/steffenlyng/serilog-sinks-rabbitmq), enabling you to easily switch between message brokers, by changing the connection string.
 
 The sink has been tested to work with EventHub and RabbitMQ.
@@ -53,4 +53,6 @@ amqps://username:passwordH@aileuh.stackhero-network.com:5671
 ```
 The sink has also been tested with EventHub and works with the same format.
 
-`amqps://username:password=@my-eventhub.servicebus.windows.net:5671`
+```
+amqps://username:password=@my-eventhub.servicebus.windows.net:5671
+```
