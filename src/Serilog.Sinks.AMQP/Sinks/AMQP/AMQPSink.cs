@@ -34,7 +34,7 @@ namespace Serilog.Sinks.AMQP
 
             _isRunning = true;
 
-            var messages = new List<Message>();
+            var messages = new List<Task>();
             foreach (var logEvent in batch)
             {
                 byte[] body;
@@ -50,10 +50,10 @@ namespace Serilog.Sinks.AMQP
                     Properties = new Properties() { GroupId = _options.MessagePropertiesGroupId }
                 };
 
-                messages.Add(message);
+                messages.Add(_senderLink.SendAsync(message));
             }
 
-            await Task.WhenAll(messages.Select(m => _senderLink.SendAsync(m)));
+            await Task.WhenAll(messages);
 
             _isRunning = false;
         }
