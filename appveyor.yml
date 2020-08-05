@@ -10,6 +10,14 @@ nuget:
 build_script:  
 - ps: .\Build.ps1
 test: off  
-artifacts:  
+artifacts:
 - path: .\**\artifacts\**\Serilog.*.nupkg
   name: NuGet
+deploy:
+- provider: NuGet
+  name: production
+  api_key:
+    secure: V+SBtVPL19ba6Vsdq3YpFFNs2hDcVU7hVSzk1+ncdyUDvx7WsdzNLmRMN5QRYySi
+  on:
+    branch: master
+    appveyor_repo_tag: true
