@@ -1,7 +1,7 @@
 ﻿using Serilog.Configuration;
 using Serilog.Sinks.PeriodicBatching;
 
-namespace Serilog.Sinks.AMQP
+namespace Serilog.Sinks.AMQP.Batching
 {
     public static class LoggerConfigurationAMQPExtension
     {

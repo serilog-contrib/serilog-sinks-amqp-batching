@@ -3,7 +3,7 @@ using Serilog.Formatting.Json;
 using Serilog.Formatting.Raw;
 using Serilog.Sinks.PeriodicBatching;
 
-namespace Serilog.Sinks.AMQP
+namespace Serilog.Sinks.AMQP.Batching
 {
     public class AMQPSinkOptions
     {

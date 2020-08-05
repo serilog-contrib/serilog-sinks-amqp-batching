@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Amqp;
@@ -9,7 +8,7 @@ using Amqp.Framing;
 using Serilog.Events;
 using Serilog.Sinks.PeriodicBatching;
 
-namespace Serilog.Sinks.AMQP
+namespace Serilog.Sinks.AMQP.Batching
 {
     public class AMQPSink : IBatchedLogEventSink, IDisposable
     {
@@ -22,9 +21,9 @@ namespace Serilog.Sinks.AMQP
         public AMQPSink(AMQPSinkOptions options)
         {
             _options = options;
-            
+
             _connection = new Connection(new Address(options.ConnectionString));
-             _session = new Session(_connection);
+            _session = new Session(_connection);
             _senderLink = new SenderLink(_session, options.SenderLinkName, options.Entity);
         }
 
@@ -46,8 +45,8 @@ namespace Serilog.Sinks.AMQP
 
                 var message = new Message
                 {
-                    BodySection = new Amqp.Framing.Data() { Binary = body },
-                    Properties = new Properties() { GroupId = _options.MessagePropertiesGroupId }
+                    BodySection = new Amqp.Framing.Data() {Binary = body},
+                    Properties = new Properties() {GroupId = _options.MessagePropertiesGroupId}
                 };
 
                 messages.Add(_senderLink.SendAsync(message));
@@ -63,13 +62,13 @@ namespace Serilog.Sinks.AMQP
             await Task.CompletedTask;
         }
 
-        public void Dispose()
+        public async void Dispose()
         {
             try
             {
-                _connection.Close();
-                _session.Close();
-                _senderLink.Close();
+                await _connection.CloseAsync();
+                await _session.CloseAsync();
+                await _senderLink.CloseAsync();
             }
             catch
             {
