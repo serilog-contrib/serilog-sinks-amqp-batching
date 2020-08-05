@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <RepositoryUrl>https://github.com/xzuttz/serilog-sinks-amqp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/xzuttz/serilog-sinks-amqp</PackageProjectUrl>	
+	<PackageTags>serilog;amqp</PackageTags>
+	<PackageLicenseUrl>https://github.com/xzuttz/serilog-sinks-amqp/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <Description>Writes batched logs to AMQP message brokers, using the AMQPNetLite package</Description>
   </PropertyGroup>
 
   <ItemGroup>
