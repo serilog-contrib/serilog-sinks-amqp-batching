@@ -1,0 +1,6 @@
+﻿{
+  "packOptions": {
+    "licenseUrl": "https://github.com/xzuttz/serilog-sinks-amqp/blob/master/LICENSE.txt",
+    "projectUrl": "https://github.com/xzuttz/serilog-sinks-amqp/"
+  }
+}
