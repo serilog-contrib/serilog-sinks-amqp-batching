@@ -31,30 +31,38 @@ namespace Serilog.Sinks.AMQP.Batching
         {
             if (_isRunning) return; // Prevent resending same logs when current batch is taking long time
 
-            _isRunning = true;
-
-            var messages = new List<Task>();
-            foreach (var logEvent in batch)
+            try
             {
-                byte[] body;
-                using (var render = new StringWriter())
+                _isRunning = true;
+
+                var messages = new List<Task>();
+                foreach (var logEvent in batch)
                 {
-                    _options.TextFormatter.Format(logEvent, render);
-                    body = Encoding.UTF8.GetBytes(render.ToString());
+                    byte[] body;
+                    using (var render = new StringWriter())
+                    {
+                        _options.TextFormatter.Format(logEvent, render);
+                        body = Encoding.UTF8.GetBytes(render.ToString());
+                    }
+
+                    var message = new Message
+                    {
+                        BodySection = new Amqp.Framing.Data() { Binary = body },
+                        Properties = new Properties() { GroupId = _options.MessagePropertiesGroupId }
+                    };
+
+                    messages.Add(_senderLink.SendAsync(message));
                 }
 
-                var message = new Message
-                {
-                    BodySection = new Amqp.Framing.Data() {Binary = body},
-                    Properties = new Properties() {GroupId = _options.MessagePropertiesGroupId}
-                };
+                await Task.WhenAll(messages);
 
-                messages.Add(_senderLink.SendAsync(message));
+                _isRunning = false;
             }
-
-            await Task.WhenAll(messages);
-
-            _isRunning = false;
+            catch (Exception)
+            {
+                _isRunning = false;
+                throw;
+            }
         }
 
         public async Task OnEmptyBatchAsync()
