@@ -29,7 +29,10 @@ namespace Serilog.Sinks.AMQP.Batching
 
         public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
         {
-            if (_isRunning) return; // Prevent resending same logs when current batch is taking long time
+            if (_isRunning)
+            {
+                return; // Prevent resending same logs when current batch is taking long time
+            }
 
             try
             {
