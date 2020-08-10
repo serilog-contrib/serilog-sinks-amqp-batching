@@ -6,7 +6,7 @@ namespace Serilog.Sinks.AMQP.Batching
 {
     public static class LoggerConfigurationAMQPExtension
     {
-        public static LoggerConfiguration AMQP(this LoggerSinkConfiguration loggerSinkConfiguration, AMQPSinkOptions amqpOptions, LogEventLevel restrictedTiMinimumLevel = LogEventLevel.Verbose)
+        public static LoggerConfiguration AMQP(this LoggerSinkConfiguration loggerSinkConfiguration, AMQPSinkOptions amqpOptions, LogEventLevel restrictedToMinimumLevel = LogEventLevel.Verbose)
         {
             var amqpSink = new AMQPSink(amqpOptions);
 
@@ -22,7 +22,7 @@ namespace Serilog.Sinks.AMQP.Batching
 
             var batchingSink = new PeriodicBatchingSink(amqpSink, batchingOptions);
 
-            return loggerSinkConfiguration.Sink(batchingSink, restrictedTiMinimumLevel);
+            return loggerSinkConfiguration.Sink(batchingSink, restrictedToMinimumLevel);
         }
     }
 }
