@@ -13,22 +13,20 @@ namespace Serilog.Sinks.AMQP.Batching
     public class AMQPSink : IBatchedLogEventSink, IDisposable
     {
         private readonly AMQPSinkOptions _options;
-        private readonly Connection _connection;
-        private readonly Session _session;
-        private readonly SenderLink _senderLink;
+        private Connection _connection;
+        private Session _session;
+        private SenderLink _senderLink;
         private bool _isRunning;
 
         public AMQPSink(AMQPSinkOptions options)
         {
             _options = options;
-
-            _connection = new Connection(new Address(options.ConnectionString));
-            _session = new Session(_connection);
-            _senderLink = new SenderLink(_session, options.SenderLinkName, options.Entity);
+            InitializeConnection();
         }
 
         public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
         {
+
             if (_isRunning)
             {
                 return; // Prevent resending same logs when current batch is taking long time
@@ -50,8 +48,8 @@ namespace Serilog.Sinks.AMQP.Batching
 
                     var message = new Message
                     {
-                        BodySection = new Amqp.Framing.Data() { Binary = body },
-                        Properties = new Properties() { GroupId = _options.MessagePropertiesGroupId }
+                        BodySection = new Amqp.Framing.Data() {Binary = body},
+                        Properties = new Properties() {GroupId = _options.MessagePropertiesGroupId}
                     };
 
                     messages.Add(_senderLink.SendAsync(message));
@@ -61,11 +59,30 @@ namespace Serilog.Sinks.AMQP.Batching
 
                 _isRunning = false;
             }
-            catch (Exception)
+            catch (AmqpException amqpException)
+            {
+                if (amqpException.Error.Condition == ErrorCode.ConnectionForced)
+                {
+                    await _connection.CloseAsync();
+                    await _session.CloseAsync();
+                    await _senderLink.CloseAsync();
+                    InitializeConnection();
+                }
+                _isRunning = false;
+                throw;
+            }
+            catch (Exception ex)
             {
                 _isRunning = false;
                 throw;
             }
+        }
+
+        public void InitializeConnection()
+        {
+            _connection = new Connection(new Address(_options.ConnectionString));
+            _session = new Session(_connection);
+            _senderLink = new SenderLink(_session, _options.SenderLinkName, _options.Entity);
         }
 
         public async Task OnEmptyBatchAsync()
