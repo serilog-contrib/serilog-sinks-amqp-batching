@@ -69,10 +69,13 @@ namespace Serilog.Sinks.AMQP.Batching
                     InitializeConnection();
                 }
                 _isRunning = false;
+
+                Log.Logger.Error(amqpException, "Internal Sink AMQPException"); // Should get caught by another Sink
                 throw;
             }
             catch (Exception ex)
             {
+                Log.Logger.Error(ex, "Internal Sink exception"); // Should get caught by another Sink
                 _isRunning = false;
                 throw;
             }
