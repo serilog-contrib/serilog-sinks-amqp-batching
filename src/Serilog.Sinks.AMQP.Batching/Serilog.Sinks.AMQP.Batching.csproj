@@ -8,7 +8,7 @@
 	<PackageTags>serilog;amqp</PackageTags>
 	<PackageLicenseUrl>https://github.com/xzuttz/serilog-sinks-amqp/blob/master/LICENSE.txt</PackageLicenseUrl>
     <Description>Writes batched logs to AMQP message brokers, using the AMQPNetLite package</Description>
-    <Version>1.0.6-beta</Version>
+    <Version>1.0.6-beta.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
