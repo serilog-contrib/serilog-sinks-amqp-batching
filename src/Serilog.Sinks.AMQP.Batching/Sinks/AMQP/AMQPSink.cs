@@ -90,6 +90,7 @@ namespace Serilog.Sinks.AMQP.Batching
 
         public async Task OnEmptyBatchAsync()
         {
+            Log.Logger.Information($"Called OnEmptyBatchAsync"); // Should get caught by another Sink
             await Task.CompletedTask;
         }
 
