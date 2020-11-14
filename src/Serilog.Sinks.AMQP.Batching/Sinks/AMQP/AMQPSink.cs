@@ -21,7 +21,8 @@ namespace Serilog.Sinks.AMQP.Batching
         public AMQPSink(AMQPSinkOptions options)
         {
             _options = options;
-            InitializeConnection();
+            var init = Task.Run(InitializeConnection);
+            init.Wait();
         }
 
         public async Task EmitBatchAsync(IEnumerable<LogEvent> batch)
@@ -61,28 +62,42 @@ namespace Serilog.Sinks.AMQP.Batching
             }
             catch (AmqpException amqpException)
             {
-                if (amqpException.Error.Condition == ErrorCode.ConnectionForced)
-                {
-                    await _connection.CloseAsync();
-                    await _session.CloseAsync();
-                    await _senderLink.CloseAsync();
-                    InitializeConnection();
-                }
+                Log.Logger.Error(amqpException, $"Internal Sink AMQPException. Error condition: {amqpException.Error.Condition}"); // Should get caught by another Sink
+
+                await InitializeConnection();
+
                 _isRunning = false;
 
-                Log.Logger.Error(amqpException, $"Internal Sink AMQPException. Error condition: {amqpException.Error.Condition}"); // Should get caught by another Sink
                 throw;
             }
             catch (Exception ex)
             {
                 Log.Logger.Error(ex, "Internal Sink exception"); // Should get caught by another Sink
+                
                 _isRunning = false;
+
+                await InitializeConnection();
+
                 throw;
             }
         }
 
-        public void InitializeConnection()
+        public async Task InitializeConnection()
         {
+            try
+            {
+                if (_connection != null && _session != null && _senderLink != null)
+                {
+                    await _connection.CloseAsync();
+                    await _session.CloseAsync();
+                    await _senderLink.CloseAsync();
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Logger.Error(ex, "Internal Sink exception while closing AMQP connections"); // Should get caught by another Sink
+            }
+
             _connection = new Connection(new Address(_options.ConnectionString));
             _session = new Session(_connection);
             _senderLink = new SenderLink(_session, _options.SenderLinkName, _options.Entity);
@@ -90,7 +105,6 @@ namespace Serilog.Sinks.AMQP.Batching
 
         public async Task OnEmptyBatchAsync()
         {
-            Log.Logger.Information($"Called OnEmptyBatchAsync"); // Should get caught by another Sink
             await Task.CompletedTask;
         }
 
