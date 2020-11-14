@@ -86,9 +86,12 @@ namespace Serilog.Sinks.AMQP.Batching
         {
             try
             {
-                await _connection.CloseAsync();
-                await _session.CloseAsync();
-                await _senderLink.CloseAsync();
+                if (_connection != null && _session != null && _senderLink != null)
+                {
+                    await _connection.CloseAsync();
+                    await _session.CloseAsync();
+                    await _senderLink.CloseAsync();
+                }
             }
             catch(Exception ex)
             {
